@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class day_1{
@@ -5,6 +6,13 @@ public class day_1{
     public static void printArr(int[] arr){
         for(int ele : arr){
             System.out.print(ele + " ");
+        }
+        System.out.println();
+        
+    }
+    public static void print2Arr(int[][] arr){
+        for (int[] a : arr) {
+            printArr(a);
         }
         System.out.println();
     }
@@ -15,6 +23,7 @@ public class day_1{
         2. Climbing Stairs with minimum moves
         3. a) Print Board Path
            b) Minimum cost path 
+           c) Multiple jumps
         4. Goldmine problem 
         5. Path with maximum gold
         6. Target Sum subsets
@@ -143,12 +152,260 @@ public class day_1{
         System.out.println(printBoardPath_memo(n, dp));
     }
 
+    // b) Minimum cost path 
+    public static int mazePath_recursive(int sr, int sc, int er, int ec, int[][] dir){
+        if(sr == er && sc == ec)
+            return 1;
+
+        int count = 0;
+        for (int i = 0; i < dir.length; i++) {
+            int r = sr + dir[i][0];
+            int c = sc + dir[i][1];
+
+            if(r >= 0 && c >= 0 && r <= er && c <= ec){
+                count += mazePath_recursive(r, c, er, ec, dir);
+            }
+        }
+        return count;
+    }
+
+    public static int mazePath_memo(int sr, int sc, int er, int ec, int[][] dir, int[][] dp){
+        if(sr == er && sc == ec)
+            return dp[sr][sc] = 1;
+
+        if(dp[sr][sc] != 0)
+            return dp[sr][sc];
+
+        int count = 0;
+        for (int i = 0; i < dir.length; i++) {
+            int r = sr + dir[i][0];
+            int c = sc + dir[i][1];
+
+            if(r >= 0 && c >= 0 && r <= er && c <= ec){
+                count += mazePath_memo(r, c, er, ec, dir, dp);
+            }
+        }
+        return dp[sr][sc] = count;
+    }
+
+    public static int mazePath_tabu(int er, int ec, int[][] dir, int[][] dp){
+      
+        for (int sr = er; sr >= 0; sr--) {
+            for (int sc = ec; sc >= 0; sc--) {
+                if(sr == er && sc == ec){
+                    dp[sr][sc] = 1;
+                    continue;
+                }
+        
+                int count = 0;
+                for (int i = 0; i < dir.length; i++) {
+                    int r = sr + dir[i][0];
+                    int c = sc + dir[i][1];
+
+                    if(r >= 0 && c >= 0 && r <= er && c <= ec){
+                        count += dp[r][c];
+                    }
+                }
+                
+                dp[sr][sc] = count;
+            }
+        }
+        return dp[0][0];
+    }
+
+    public static int mazePath_withJumps_memo(int sr, int sc, int er, int ec, int[][] dir, int[][] dp){
+        if(sr == er && sc == ec) {
+            return dp[sr][sc] = 1;
+        }
+
+        if(dp[sr][sc] != 0)
+            return dp[sr][sc];
+
+        int count = 0;
+        for(int d = 0; d < dir.length; d++){
+            for(int rad = 1; rad <= Math.max(er,ec); rad++){
+                int r = sr + rad * dir[d][0];
+                int c = sc + rad * dir[d][1];
+
+                if(r >= 0 && c >= 0 && r <= er && c <= ec)
+                    count += mazePath_memo(r, c, er, ec, dir, dp);
+                else 
+                    break;
+            }
+        }
+        return dp[sr][sc] = count;
+    }
+
+
+    public static int mazePath_withJumps_tabu(int SR, int SC, int er, int ec, int[][] dir, int[][] dp){
+        for (int sr = er; sr >= 0; sr--) {
+            for(int sc = ec; sc >= 0; sc--){
+                if(sr == er && sc == ec) {
+                    dp[sr][sc] = 1;
+                    continue;
+                }
+
+                int count = 0;
+                for(int d = 0; d< dir.length; d++){
+                    for(int rad = 1; rad <= Math.max(er,ec); rad++){
+                        int r = sr + rad * dir[d][0];
+                        int c = sc + rad * dir[d][1];
+                        
+                        if(r >= 0 && c >= 0 && r <= er && c <= ec)
+                            count += dp[r][c];
+                        else 
+                            break;
+                    }
+                }
+                dp[sr][sc] = count;
+            }
+        }
+
+        return dp[SR][SC];
+
+    }
+
+    public static void mazePath() {
+        /**
+         * Calculate the number of paths from src to dest 
+         */
+        int n = scn.nextInt();
+        int m = scn.nextInt();
+
+        int[][] dp = new int[n][m];
+        int[][] dir = { { 0, 1 }, { 1, 1 }, { 1, 0} };
+        // int ans = mazePath_recursive(0, 0, n - 1, m  - 1, dir);
+        // int ans = mazePath_memo(0, 0, n - 1, m  - 1, dir, dp);
+        int ans = mazePath_tabu(n - 1, m - 1, dir, dp);
+        print2Arr(dp);
+        System.out.println(ans);
+    }
+
+    // Minimum cost in a maze
+    // https://leetcode.com/problems/minimum-path-sum/
+
+    public static int minPathSum_memo(int sr, int sc, int er, int ec, int[][] grid, int[][] dir, int[][] dp){
+        if(sr == er && sc == ec){
+            return dp[sr][sc] = grid[sr][sc];
+        }
+
+        if(dp[sr][sc] != 0)
+            return dp[sr][sc];
+
+        int cost = (int)1e9;
+        for(int d = 0; d < dir.length; d++){
+            int r = sr + dir[d][0];
+            int c = sc + dir[d][1];
+
+            if(r >= 0 && c >= 0 && r <= er && c <= ec){
+                cost = Math.min(cost, minPathSum_memo(r, c, er, ec, grid, dir, dp));
+            }
+        }
+        return dp[sr][sc] = cost + grid[sr][sc];
+    }
+
+    public static void minPathSum() {
+        int n = scn.nextInt();
+        int m = scn.nextInt();
+
+        int[][] grid = new int[n][m];
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                grid[i][j] = scn.nextInt();
+            }
+        }
+        int[][] dir = { {0, 1}, {1, 0} };
+        int[][] dp = new int[n][m];
+        int ans = minPathSum_memo(0, 0, n - 1, m - 1, grid, dir, dp);
+        print2Arr(dp);
+        System.out.println(ans);
+    }
+
+
+    // 4. Goldmine problem 
+    public static int goldmineProblem_memo(int[][] grid, int r, int c, int[][] dp, int[][] dir){
+        if(c == grid[0].length - 1){
+            return dp[r][c] = grid[r][c];
+        }
+        if(dp[r][c] != -1){
+            return dp[r][c];
+        }
+
+        int maxGold = 0;
+        for (int d = 0; d < dir.length; d++) {
+            int x = r + dir[d][0];
+            int y = c + dir[d][1];
+
+            if(x >= 0 && y >= 0 && x <  grid.length && y < grid[0].length){
+                maxGold = Math.max(maxGold, goldmineProblem_memo(grid, x, y, dp, dir) + grid[r][c]);
+            }
+        }
+
+        return dp[r][c] = maxGold;
+    }
+
+    public static int goldmineProblem_tabu(int[][] grid, int R, int C, int[][] dp, int[][] dir){
+
+        int n = grid.length, m = grid[0].length;
+        for (int c = grid[0].length; c >= 0; c--) {
+            for (int r = grid.length - 1; r >= 0; r--) {
+                
+        if(c == grid[0].length - 1){
+            return dp[r][c] = grid[r][c];
+        }
+        if(dp[r][c] != -1){
+            return dp[r][c];
+        }
+
+        int maxGold = 0;
+        for (int d = 0; d < dir.length; d++) {
+            int x = r + dir[d][0];
+            int y = c + dir[d][1];
+
+            if(x >= 0 && y >= 0 && x <  grid.length && y < grid[0].length){
+                maxGold = Math.max(maxGold, goldmineProblem_memo(grid, x, y, dp, dir) + grid[r][c]);
+            }
+        }
+
+        return dp[r][c] = maxGold;
+            }
+        }
+
+    }
+
+    public static void goldmineProblem() {
+        int n = scn.nextInt();
+        int m = scn.nextInt();
+
+        int[][] grid = new int[n][m];
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                grid[i][j] = scn.nextInt();
+            }
+        }
+        int[][] dir = { {-1, 1}, {1, 1}, {0, 1} };
+        int[][] dp = new int[n][m];
+        for (int[] a : dp) {
+            Arrays.fill(a, -1);
+        }
+
+        int maxGold = 0;
+        for (int i = 0; i < n; i++) {
+            maxGold = Math.max(maxGold, goldmineProblem_memo(grid, i, 0, dp, dir));
+        }
+
+        print2Arr(dp);
+        System.out.println(maxGold);
+    }
+
 
 
     public static void main(String[] args) {
         // climbStairs_();
         // minCostClimbingStairs();
-        boardPathProblem();
+        // boardPathProblem();
+        // mazePath();
+        // minPathSum();
+        goldmineProblem();
     }
-
 }
