@@ -26,8 +26,6 @@ public class day_1{
            c) Multiple jumps
         4. Goldmine problem 
         5. Path with maximum gold
-        6. Target Sum subsets
-
      */
 
     // 1. Climbing Stairs with jumps  
@@ -350,27 +348,25 @@ public class day_1{
         for (int c = grid[0].length; c >= 0; c--) {
             for (int r = grid.length - 1; r >= 0; r--) {
                 
-        if(c == grid[0].length - 1){
-            return dp[r][c] = grid[r][c];
-        }
-        if(dp[r][c] != -1){
-            return dp[r][c];
-        }
+                if(c == grid[0].length - 1){
+                     dp[r][c] = grid[r][c];
+                     continue;
+                }
 
-        int maxGold = 0;
-        for (int d = 0; d < dir.length; d++) {
-            int x = r + dir[d][0];
-            int y = c + dir[d][1];
+                int maxGold = 0;
+                for (int d = 0; d < dir.length; d++) {
+                    int x = r + dir[d][0];
+                    int y = c + dir[d][1];
 
-            if(x >= 0 && y >= 0 && x <  grid.length && y < grid[0].length){
-                maxGold = Math.max(maxGold, goldmineProblem_memo(grid, x, y, dp, dir) + grid[r][c]);
+                    if(x >= 0 && y >= 0 && x <  grid.length && y < grid[0].length){
+                        maxGold = Math.max(maxGold, dp[x][y] + grid[r][c]);
+                    }
+                }
+
+                dp[r][c] = maxGold;
             }
         }
-
-        return dp[r][c] = maxGold;
-            }
-        }
-
+        return dp[R][C];
     }
 
     public static void goldmineProblem() {
