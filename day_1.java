@@ -343,8 +343,7 @@ public class day_1{
     }
 
     public static int goldmineProblem_tabu(int[][] grid, int R, int C, int[][] dp, int[][] dir){
-
-        int n = grid.length, m = grid[0].length;
+    
         for (int c = grid[0].length; c >= 0; c--) {
             for (int r = grid.length - 1; r >= 0; r--) {
                 
