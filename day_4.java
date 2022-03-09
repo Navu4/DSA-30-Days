@@ -35,8 +35,7 @@ public class day_4 {
         3. With Transaction Fee and Infinite Transaction Allowed
         4. With Cool Down and Infinite Transaction Allowed
         5. Two Transaction Allowed
-        6. K Transaction Allowed
-        7. Highway Billboard Problem    
+        6. K Transaction Allowed 
     */
 
 

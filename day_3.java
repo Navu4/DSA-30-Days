@@ -49,6 +49,7 @@ public class day_3 {
       * Remaining question this set 
         1. Decode way II
         2. Paint Fence 
+        3. Count Subsequences for  A B C ....
       */
 
     // 1. Count Binary String | Binary Strings with no consecutive 0's |
@@ -358,10 +359,134 @@ public class day_3 {
     
     }
 
+    // 6. Tiling with Dominoes 
+    public static void tilingWithDominoes(){
+        int n = scn.nextInt();
+
+        int[] dp = new int[n + 1];
+        dp[1] = 1;
+        dp[2] = 2;
+
+        // Vertical Tile => n - 1 space left
+        // horizontal Tile => n - 2 space left --- 
+        // why? bcoz horizontal tile rkhne ke baad uske upr ya niche vala section b single tile se hi cover krna pdhega 
+
+        for (int i = 3; i < dp.length; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        } 
+        System.out.println(dp[n]);
+    }
+
+    // 7. Tiling With M * 1 Tiles
+    public static void tilingWithDominoesMxN() {
+        int n = scn.nextInt();
+        int m = scn.nextInt();
+
+        int[] dp = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
+            if(i < m){
+                dp[i] = 1;
+            } else if(i == m){
+                dp[i] = 2;
+            } else {
+                dp[i] = dp[i - 1] + dp[i - m];
+            }
+        }
+        System.out.println(dp[n]);
+    }
+
+
+    // 8. Friends Pairing
+    public static int friendsPairing_memo(int n, int[] dp){
+        if(n == 0 || n == 1)
+            return dp[n] = 1;
+
+        if(dp[n] != -1)
+            return dp[n];
+
+        int singlePair = friendsPairing_memo(n - 1, dp);
+        int pairingCount = friendsPairing_memo(n - 2, dp) * (n - 1);
+
+
+        return dp[n] = singlePair + pairingCount;
+
+    }
+
+    public static int friendsPairing_tabu(int N, int[] dp){
+
+        for (int n = 0; n < dp.length; n++) {
+            if(n == 0 || n == 1){
+                dp[n] = 1;
+                continue;
+            }
+
+
+            int singlePair = friendsPairing_memo(n - 1, dp);
+            int pairingCount = friendsPairing_memo(n - 2, dp) * (n - 1);
+
+
+            dp[n] = singlePair + pairingCount;
+        }
+        return dp[N];
+    }
+
+    public static void friendsPairing() {
+        int n = scn.nextInt();
+
+        int[] dp = new int[n + 1];
+        System.out.println(friendsPairing_tabu(n, dp));
+    }
+
+    // 9. Partition
+    public static void partitionIntoSubsets() {
+        /**
+         * Formula using recursive observation
+         * f(n, k) = k x f(n - 1, k) + f(n - 1, k - 1)
+         * 
+         * Edge Cases :
+         * n = 0, 0
+         * k = 0, 0
+         * k = 1, 1
+         * n < k, 0
+         * n = k, 1
+         * n > k keliye upr formula hai 
+         * 
+         * 2D Dp for k + 1 and n + 1
+         */
+
+         int n = scn.nextInt();
+         int k = scn.nextInt();
+
+         System.out.println(partitionKSubset(n, k));
+    }
+
+    public static long partitionKSubset(int n, int k) {
+        // write your code here
+        if(n == 0 || k == 0 || n < k)
+            return 0;
+
+        long[][] dp = new long[k + 1][n + 1];
+
+        for (int t = 1; t < dp.length; t++) {
+            for (int p = 1; p < dp[0].length; p++) {
+                if(p < t){
+                    dp[t][p] = 0;
+                } else if(p == t){
+                    dp[t][p] = 1; 
+                } else {
+                    dp[t][p] = dp[t - 1][p - 1] + dp[t][p - 1] * t;
+                }
+            }
+        }
+
+        return dp[k][n];
+    }
 
 
     public static void main(String[] args) {
         // countBinary();
-        decodeWayI();
+        // decodeWayI();
+        // tilingWithDominoes();
+        // tilingWithDominoesMxN();
     }
 }
