@@ -98,23 +98,117 @@ public class day_4 {
     }
 
     //   3. With Transaction Fee and Infinite Transaction Allowed
-    public static int withTransactionFeeInfiniteTransaction(int[] arr, int n) {
-        return 0;
+    public static int withTransactionFeeInfiniteTransaction(int[] arr, int n, int fee) {
+        int[][] dp = new int[n][2];
+
+        dp[0][0] = -arr[0];
+        dp[0][1] = 0;
+
+        for(int i = 1; i < n; i++){
+            if(dp[i - 1][0] < dp[i - 1][1] - arr[i]){
+                dp[i][0] = dp[i - 1][1] - arr[i];
+            } else {
+                dp[i][0] = dp[i - 1][0];
+            }
+
+            if(dp[i - 1][1] < dp[i - 1][0] + arr[i] - fee){
+                dp[i][1] = dp[i - 1][0] + arr[i] - fee;
+            } else {
+                dp[i][1] = dp[i - 1][1] ;
+            }
+        }
+
+        return Math.max(dp[n - 1][0], dp[n - 1][1]);
+    
     }
 
     //4. With Cool Down and Infinite Transaction Allowed
     public static int withCoolDownFeeInfiniteTransaction(int[] arr, int n) {
-        return 0;
+        int[][] dp = new int[n][3];
+
+        dp[0][0] = -arr[0];
+        dp[0][1] = 0;
+        dp[0][2] = 0;
+
+        for (int i = 1; i < dp.length; i++) {
+            if(dp[i - 1][0] < dp[i - 1][2] - arr[i]){
+                dp[i][0] = dp[i - 1][2] - arr[i];
+            } else {
+                dp[i][0] = dp[i - 1][0];
+            }
+
+            if(dp[i - 1][1] < dp[i - 1][0] + arr[i]){
+                dp[i][1] = dp[i - 1][0] + arr[i];
+            } else {
+                dp[i][1] = dp[i - 1][1];
+            }
+
+            if(dp[i - 1][2] < dp[i - 1][1]){
+                dp[i][2] = dp[i - 1][1];
+            } else {
+                dp[i][2] = dp[i - 1][2];
+            }
+        }
+
+        return Math.max(dp[n - 1][0], Math.max(dp[n - 1][2], dp[n - 1][1]));
     }
 
     // 5. Two Transaction Allowed
     public static int twoTransactionAllowed(int[] arr, int n) {
-        return 0;
+        /**
+         * Note: 
+         * 1) Ek baari Left se traverse krte hue maximum profit till that particular index store krvao
+         *      1.1) For a particular index selling is mandatory yeh socho
+         * 
+         * 2) Ek baari Right se traverse krte hue maximum profit before that particular index store krvao
+         *      2.1) For a particular index buying is mandatory yeh socho
+         */
+        
+        int least = arr[0];
+        int[] dpL = new int[n];
+
+        for(int i = 1; i < n; i++){
+            least = arr[i] < least ? arr[i] : least;  
+            dpL[i] = (dpL[i - 1] < (arr[i] - least)) ? arr[i] - least : dpL[i - 1]; 
+        }
+
+        int max = arr[n - 1];
+        int[] dpR = new int[n];
+
+        for(int i = n - 2; i >= 0; i--){
+            max = arr[i] > max ? arr[i] : max;  
+            dpR[i] = (dpR[i + 1] < (max - arr[i])) ? max - arr[i] : dpR[i + 1]; 
+        }
+
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            ans = Math.max(ans, dpR[i] + dpL[i]);
+        }
+
+        return ans;
+    
+        
     }
 
     // 6. K Transaction Allowed 
-    public static int kTransactionAllowed(int[] arr, int n) {
-        return 0;
+    public static int kTransactionAllowed(int[] arr, int n, int noOfTransactions) {
+        int[][] dp = new int[noOfTransactions + 1][n];
+
+        for (int t = 1; t <= noOfTransactions; t++) {
+            for (int d = 1; d < n; d++) {
+                dp[t][d] = dp[t][d - 1];
+
+                for (int k = 0; k < d; k++) {
+                    dp[t][d] = dp[t][d] < dp[t - 1][k] + arr[d] - arr[k] ? 
+                                            dp[t - 1][k] + arr[d] - arr[k] 
+                                            : dp[t][d];
+
+                     
+                }
+            }
+        }
+
+        return dp[noOfTransactions][n - 1];
     }
 
 
@@ -127,7 +221,8 @@ public class day_4 {
         }
 
         // System.out.println(oneTransactionAllowed(arr, n));
-        System.out.println(infiniteTransactionAllowed(arr, n));
+        System.out.println(infiniteTransactionAllowed_myAns(arr, n));
+        // System.out.println(infiniteTransactionAllowed_sirAns(arr, n));
     }
 
     public static void buyAndSellWithFee() {
@@ -138,6 +233,8 @@ public class day_4 {
             arr[i] = scn.nextInt();
         }
         int fee = scn.nextInt();
+
+        System.out.println(withTransactionFeeInfiniteTransaction(arr, n, fee));
     }
 
 
