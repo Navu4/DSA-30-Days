@@ -192,21 +192,40 @@ public class day_4 {
 
     // 6. K Transaction Allowed 
     public static int kTransactionAllowed(int[] arr, int n, int noOfTransactions) {
+        if(arr.length == 0)
+            return 0;
         int[][] dp = new int[noOfTransactions + 1][n];
 
+        // Isme Optimization lg skti hai aur third loop hta skte hai 
+        // for (int t = 1; t <= noOfTransactions; t++) {
+        //     for (int d = 1; d < n; d++) {
+        //         dp[t][d] = dp[t][d - 1];
+
+        //         for (int k = 0; k < d; k++) {
+        //             dp[t][d] = dp[t][d] < dp[t - 1][k] + arr[d] - arr[k] ? 
+        //                                     dp[t - 1][k] + arr[d] - arr[k] 
+        //                                     : dp[t][d];        
+        //         }
+        //     }
+        // }
+
         for (int t = 1; t <= noOfTransactions; t++) {
+            int max = -(int)1e9;
+
             for (int d = 1; d < n; d++) {
-                dp[t][d] = dp[t][d - 1];
+                if(dp[t - 1][d - 1] - arr[d - 1] > max){
+                    max = dp[t - 1][d - 1] - arr[d - 1];
+                }
 
-                for (int k = 0; k < d; k++) {
-                    dp[t][d] = dp[t][d] < dp[t - 1][k] + arr[d] - arr[k] ? 
-                                            dp[t - 1][k] + arr[d] - arr[k] 
-                                            : dp[t][d];
-
-                     
+                if(max + arr[d] > dp[t][d - 1]){
+                    dp[t][d] = max + arr[d];
+                } else {
+                    dp[t][d] = dp[t][d - 1];
                 }
             }
         }
+
+
 
         return dp[noOfTransactions][n - 1];
     }
