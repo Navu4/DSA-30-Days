@@ -55,7 +55,7 @@
     6. Paths in 0-1 knapsack 
     7. 2 Keys Keyboard
 
-- Day 6 : Longest Increasing Problem - String Set - I (Most Important Set) 
+- Day 6 : Longest Increasing Subsequence Problem - String Set - I (Most Important Set) 
     1. Longest Increasing Subsequence (LIS)
     2. Print All LIS
     3. Maximum Sum Increasing Subsequence
