@@ -43,6 +43,35 @@
     6. K Transaction Allowed 
 
 
+
+### Week - 2 (Dynamic Programming Level - 2)
+
+- Day 5 : Print Path using Reverse Engineering
+    1. Largest Square Submatrix of all 1's
+    2. Print all path in min cost
+    3. Print all path with minimum jumps
+    4. Print all path with max gold
+    5. Print Subsets with Target Sum 
+    6. Paths in 0-1 knapsack 
+    7. 2 Keys Keyboard
+
+- Day 6 : Longest Increasing Problem - String Set - I (Most Important Set) 
+    1. Longest Increasing Subsequence (LIS)
+    2. Print All LIS
+    3. Maximum Sum Increasing Subsequence
+    4. Longest Bitonic Subsequence
+    5. Maximum Non-Overlapping 
+    6. Russian Doll Envelopes
+    7. Min Squares
+
+- Day 7 : Catalan Set
+    1. Catalan Number
+    2. Number of Bsts
+    3. Count of Valleys and Mountains
+    4. Count Brackets
+    5. Circle and Chords
+    6. Number of Ways of Triangulation
+
 # Important Topic to be covered in 30 days
 
 
