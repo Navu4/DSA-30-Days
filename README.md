@@ -72,6 +72,17 @@
     5. Circle and Chords
     6. Number of Ways of Triangulation
 
+- Day 8: 
+
+- Day 9: 
+    1. Minimum Palindromic Cut
+    2. Longest Common Subsequence
+    3. Longest Palindromic Subsequence
+    4. Count Palindromic Subsequence
+    5. Count Palindromic Substring
+    6. Longest Palindromic Substring
+    
+
 # Important Topic to be covered in 30 days
 
 
