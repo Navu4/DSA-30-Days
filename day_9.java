@@ -252,6 +252,41 @@ public class day_9 {
     }
 
 
+    // 4. Count Palindromic Subsequence
+    /**
+     *  
+     * fn(str) = fn(c1 + m + c2)
+     * Cases 
+     * case i :  c1 == c2
+     *      fn(c1 m c2) = fn(c1 m) + fn(m c2) + 1
+     * case ii : c1 != c2  
+     *      fn(c1 m c2) = fn(c1 m) + fn(m c2) - fn(m)
+     * 
+     */
+    public static void CountPalindromicSubsequence() {
+        String str = scn.nextLine();
+
+        int n = str.length();
+        int[][] dp = new int[n][n];
+
+        for (int gap = 0; gap < dp.length; gap++) {
+            for (int i = 0, j = gap; j < n && i < dp.length;j++, i++) {
+                if(i == j){
+                    dp[i][j] = 1;
+                } else if(j - i == 1){
+                    dp[i][j] = str.charAt(i) == str.charAt(j) ? 3 : 2; 
+                } else {
+                    if(str.charAt(i) == str.charAt(j)){
+                        dp[i][j] = dp[i + 1][j] + dp[i][j - 1] + 1;
+                    } else {
+                        dp[i][j] = dp[i + 1][j] + dp[i][j - 1] - dp[i + 1][j - 1];
+                    }
+                }
+            }
+        }
+
+        System.out.println(dp[0][n - 1]);
+    }
 
     // * 5. Count Palindromic Substring
     // * 6. Longest Palindromic Substring
@@ -303,6 +338,7 @@ public class day_9 {
         // longestCommonSubsequence();
         // LPSS();
         // longestPalindromicSubsequence();
-        LongestPalindromicSubString();
+        // LongestPalindromicSubString();
+        CountPalindromicSubsequence();
      }
 }
