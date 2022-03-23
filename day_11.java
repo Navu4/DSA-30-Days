@@ -542,6 +542,7 @@ public class day_11{
   
     }
   
+    
 
     public static void main(String[] args){
         
