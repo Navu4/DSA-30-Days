@@ -46,6 +46,9 @@ public class day_10 {
     }
 
 
+    //  2. Count Distinct Palindromic Subsequence
+    
+
     public static void main(String[] args) {
         
     }
