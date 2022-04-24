@@ -218,6 +218,52 @@ public class day_2 {
         return dp[tar];
     }
 
+    // https://leetcode.com/problems/coin-change/
+    public class Pair {
+        int val = 0;
+        int count = (int)1e9 ;
+        
+        Pair(int val, int count){
+            this.val = val;
+            this.count = count;
+        }
+    }
+    
+    public int coinChange(int[] arr, int tar) {
+        int n = arr.length;
+        Pair[] dp = new Pair[tar + 1];
+        
+        for(int i = 1; i < dp.length; i++){
+            dp[i] = new Pair(0, (int)1e9);
+        }
+        
+        dp[0] = new Pair(1, 0);
+        
+        for(int i = 0; i < n; i++){
+            for(int j = arr[i]; j < dp.length; j++){
+                dp[j].val = dp[j].val + dp[j - arr[i]].val;
+                dp[j].count = Math.min(dp[j].count, dp[j - arr[i]].count + 1);
+            }
+        }
+        
+        
+        return dp[tar].count == (int)1e9 ? -1 : dp[tar].count ;
+    }
+
+    // https://leetcode.com/problems/coin-change-2/
+     public int change(int amount, int[] coins) {
+        int[] dp = new int[amount + 1];
+        dp[0] = 1;
+        
+        for(int i = 0; i < coins.length; i++){
+            for(int j = coins[i]; j < dp.length; j++){
+                dp[j] += dp[j - coins[i]];
+            }
+        }
+
+        return dp[amount];
+    }
+
     public static void coinChange_Per(){
 
         int n = scn.nextInt();
