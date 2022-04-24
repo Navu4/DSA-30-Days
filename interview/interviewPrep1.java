@@ -155,6 +155,22 @@ public class interviewPrep1 {
         return sb.reverse().toString();
     }
 
+    public static class Node {
+        int data;
+        Node right, left;
+
+        Node(){}
+        Node(int data){
+            this.data = data;
+        }
+        Node(int data, Node left, Node right) {
+            this.data = data;
+            this.left = left;
+            this.right = right;
+        }
+
+    }
+
     // https://practice.geeksforgeeks.org/problems/height-of-spiral-tree/1/
     public static int findTreeHeight(Node root){
         if(root == null)
