@@ -6,6 +6,5 @@ public class day_8 {
      * 3. Minimum Score of Triangulation
      * 4. Boolean Parenthesization
      * 5. Optimal Binary Search Tree
-     * 6. Rod Cutting
      */
 }
