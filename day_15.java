@@ -1,11 +1,18 @@
+import java.util.LinkedList;
+
 public class day_15 {
     public static class TreeNode {
         int val;
         TreeNode left, right;
 
-        TreeNode() {}
-        TreeNode(int val) { this.val = val; }
-        TreeNode(int val, TreeNode left, TreeNode right){
+        TreeNode() {
+        }
+
+        TreeNode(int val) {
+            this.val = val;
+        }
+
+        TreeNode(int val, TreeNode left, TreeNode right) {
             this.val = val;
             this.left = left;
             this.right = right;
@@ -13,7 +20,7 @@ public class day_15 {
     }
 
     /**
-     * Construction Set 
+     * Construction Set
      * -------------------------------------
      * Construct BST using
      * 1. Inorder
@@ -30,15 +37,85 @@ public class day_15 {
      * 
      */
 
-     // Post & inOrder
-    
-     public static TreeNode preOrIn(int[] pre, int[] in, int psi, int pei, int isi, int iei) {
-        if(psi > pei || isi > iei)
+    // Inorder
+    public static TreeNode inorderConstruction(int[] inOrder, int si, int ei) {
+        if (si > ei)
             return null;
 
+        int mid = (si + ei) / 2;
+        TreeNode root = new TreeNode(inOrder[mid]);
+
+        root.left = inorderConstruction(inOrder, si, mid - 1);
+        root.right = inorderConstruction(inOrder, mid + 1, ei);
+
+        return root;
+    }
+
+    // preOrder
+    public static TreeNode preOrderConstruction(int[] preOrder, int[] idx, int lr, int rr) {
+        // base case
+        if (idx[0] == preOrder.length || lr > preOrder[idx[0]] || rr < preOrder[idx[0]]) {
+            return null;
+        }
+
+        // pre order
+        TreeNode node = new TreeNode(preOrder[idx[0]++]);
+
+        node.left = preOrderConstruction(preOrder, idx, lr, node.val);
+        node.right = preOrderConstruction(preOrder, idx, node.val, rr);
+
+        return node;
+    }
+
+    // Level Order
+    public static class Pair {
+        int lr, rr;
+        TreeNode root;
+
+        Pair(TreeNode root, int lr, int rr) {
+            this.root = root;
+            this.lr = lr;
+            this.rr = rr;
+        }
+    }
+
+    public static TreeNode levelOrderConstruction(int[] nums) {
+        LinkedList<Pair> que = new LinkedList<>();
+        int idx = 0;
+        TreeNode root = new TreeNode(nums[idx++]);
+        que.add(new Pair(root, -(int) 1e9, (int) 1e9));
+
+        while (que.size() != 0) {
+            Pair rp = que.removeFirst();
+            int lr = rp.lr, rr = rp.rr;
+            TreeNode rNode = rp.root;
+
+            int val = nums[idx];
+            if (val < lr && val > rr) {
+                continue;
+            }
+
+            TreeNode node = new TreeNode(nums[idx++]);
+            if (node.val < rNode.val) {
+                rNode.left = node;
+            } else {
+                rNode.right = node;
+            }
+
+            que.add(new Pair(node, lr, node.val));
+            que.add(new Pair(root, node.val, rr));
+        }
+
+        return root;
+    }
+
+    // Post & inOrder
+    public static TreeNode preOrIn(int[] pre, int[] in, int psi, int pei, int isi, int iei) {
+        if (psi > pei || isi > iei)
+            return null;
 
         int idx = isi;
-        while(in[idx] != pre[psi])
+        while (in[idx] != pre[psi])
             idx++;
 
         int tel = idx - isi;
@@ -51,17 +128,14 @@ public class day_15 {
         return root;
     }
 
-
     public static TreeNode PreOrderAndInorder(int[] preorder, int[] inorder) {
         int n = preorder.length;
         return preOrIn(preorder, inorder, 0, n - 1, 0, n - 1);
     }
 
-
-
     // Post and InOrder
-    public static TreeNode PostOrderAndInOrder(int[] post, int[] in, int psi, int pei, int isi, int iei){
-        if(psi > pei || isi > iei){
+    public static TreeNode PostOrderAndInOrder(int[] post, int[] in, int psi, int pei, int isi, int iei) {
+        if (psi > pei || isi > iei) {
             return null;
         }
 
@@ -77,15 +151,15 @@ public class day_15 {
 
         return root;
     }
-    
-    public static TreeNode PostOrderAndInOrder(int[] post, int[] in){
+
+    public static TreeNode PostOrderAndInOrder(int[] post, int[] in) {
         int n = post.length;
-        return PostOrderAndInOrder(post, in, 0, n - 1, 0 , n - 1);
+        return PostOrderAndInOrder(post, in, 0, n - 1, 0, n - 1);
     }
 
     // PreOrder and PostOrder
-    public static TreeNode PreOrderAndPostOrder(int[] pre, int[] post, int preSI, int preEI, int postSI, int postEI){
-        if(preSI > preSI || postSI > postEI){
+    public static TreeNode PreOrderAndPostOrder(int[] pre, int[] post, int preSI, int preEI, int postSI, int postEI) {
+        if (preSI > preSI || postSI > postEI) {
             return null;
         }
 
@@ -101,17 +175,48 @@ public class day_15 {
 
         return root;
     }
-    
-    public static TreeNode PreOrderAndPostOrder(int[] pre, int[] post){
+
+    public static TreeNode PreOrderAndPostOrder(int[] pre, int[] post) {
         int n = post.length;
-        return PostOrderAndInOrder(pre, post, 0, n - 1, 0 , n - 1);
+        return PostOrderAndInOrder(pre, post, 0, n - 1, 0, n - 1);
     }
 
+    public static void main(String[] args) {
 
+    }
 
-      public static void main(String[] args) {
-          
-      }
+    static int[] calc(int ar[], int f, int m) {
+        int n = ar.length;
+        int den = n + f, sum = 0;
+        for (int i = 0; i < n; i++) {
+            sum += ar[i];
+        }
+        int rhs = m * den;
+        int c = 0, maxSum = 6 * f;
+        rhs -= sum;
+        int ans[] = { 0 };
+        if (rhs > maxSum || rhs < 0) {
+            return ans;
+        }
+        int chi[] = new int[f];
+        while (rhs != 0) {
+            if (rhs >= 5 + f) {
+                chi[c] = 6;
+                rhs -= 6;
+                f--;
+                c++;
+            } else {
+                rhs -= (f - 1);
+                chi[c++] = rhs;
+                f--;
+                while (f != 0) {
+                    chi[c++] = 1;
+                    f--;
+                }
+                break;
+            }
+        }
+        return chi;
+    }
 
 }
-
