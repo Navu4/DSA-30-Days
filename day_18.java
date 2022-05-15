@@ -5,8 +5,9 @@ public class day_18 {
     /**
      * Trie Data Structure
      * 1. Implement Trie (Prefix Tree)
-     * 2. Design Add and Search Words Data Structure
-     * 3. Word Search II
+     * 2. Complete String
+     * 3. Design Add and Search Words Data Structure
+     * 4. Word Search II
      * 
      * 
      */
@@ -78,6 +79,106 @@ public class day_18 {
             }
 
             return true;
+        }
+    }
+
+    // Complete String
+    // https://www.codingninjas.com/codestudio/problems/complete-string_2687860?utm_source=youtube&utm_medium=affiliate&utm_campaign=striver_tries_videos&leftPanelTab=0
+
+    class CompleteString {
+        public class Node {
+            boolean isEnd;
+            char ch;
+            Node[] childs;
+
+            Node() {
+                this.childs = new Node[26];
+            }
+        }
+
+        public void insertIntoTrie(String str, Node root) {
+            Node curr = root;
+            for (int j = 0; j < str.length(); j++) {
+                char ch = str.charAt(j);
+
+                if (curr.childs[ch - 'a'] == null) {
+                    curr.childs[ch - 'a'] = new Node();
+                }
+
+                curr = curr.childs[ch - 'a'];
+            }
+            curr.isEnd = true;
+        }
+
+        public boolean checkIfExists(String word, Node root) {
+            Node curr = root;
+
+            for (int i = 0; i < word.length(); i++) {
+                char ch = word.charAt(i);
+
+                if (curr == null || curr.childs[ch - 'a'] == null || curr.childs[ch - 'a'].isEnd == false) {
+                    return false;
+                }
+                curr = curr.childs[ch - 'a'];
+            }
+            return curr.isEnd == true;
+        }
+
+        public String completeString(int n, String[] a) {
+
+            Node root = new Node();
+            for (String str : a) {
+                insertIntoTrie(str, root);
+            }
+
+            String ans = "";
+            for (String str : a) {
+
+                if (checkIfExists(str, root)) {
+                    if (str.length() > ans.length()) {
+                        ans = str;
+                    } else if (str.length() == ans.length() && str.compareTo(ans) < 0) {
+                        ans = str;
+                    }
+                }
+            }
+
+            return ans.length() == 0 ? "None" : ans;
+        }
+    }
+
+    // Count Distinct SubString
+    // https://www.codingninjas.com/codestudio/problems/count-distinct-substrings_985292?utm_source=youtube&utm_medium=affiliate&utm_campaign=striver_tries_videos&leftPanelTab=0
+    public class CountDistinctSubstring {
+        public class Node {
+            Node[] childs;
+
+            Node() {
+                this.childs = new Node[26];
+            }
+        }
+
+        public int countDistinctSubstrings(String s) {
+            if (s.length() == 0)
+                return 1;
+
+            Node root = new Node();
+            int count = 0;
+            for (int i = 0; i < s.length(); i++) {
+                Node curr = root;
+
+                for (int j = i; j < s.length(); j++) {
+                    char ch = s.charAt(j);
+                    if (curr != null && curr.childs[ch - 'a'] == null) {
+                        count++;
+                        curr.childs[ch - 'a'] = new Node();
+                    }
+
+                    curr = curr.childs[ch - 'a'];
+                }
+            }
+
+            return count + 1;
         }
     }
 
