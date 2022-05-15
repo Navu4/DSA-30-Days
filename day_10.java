@@ -22,34 +22,34 @@ public class day_10 {
     // https://leetcode.com/problems/distinct-subsequences-ii/
     public int distinctSubseqII(String s) {
         int n = s.length();
-        int mod = (int)1e9 + 7;
-        
+        int mod = (int) 1e9 + 7;
+
         int[] dp = new int[n + 1];
         dp[0] = 1;
-        
+
         HashMap<Character, Integer> lastOccurrence = new HashMap<>();
         // Instead of HashMap we can use array of size 26
 
-        for(int i = 1; i < dp.length; i++){         
-            
+        for (int i = 1; i < dp.length; i++) {
+
             char ch = s.charAt(i - 1);
-            if(lastOccurrence.containsKey(ch)){
-                int j = lastOccurrence.get(ch) - 1;                
-                dp[i]=((( 2 * dp[i-1] ) % mod ) - dp[j] + mod ) % mod;  // IMPORTANT METHOD OF MODULUS
+            if (lastOccurrence.containsKey(ch)) {
+                int j = lastOccurrence.get(ch) - 1;
+                dp[i] = (((2 * dp[i - 1]) % mod) - dp[j] + mod) % mod; // IMPORTANT METHOD OF MODULUS
             } else {
-                  dp[i]=((( 2 * dp[i-1] ) % mod ) % mod);
+                dp[i] = (((2 * dp[i - 1]) % mod) % mod);
             }
             lastOccurrence.put(ch, i);
         }
-        
-        return (int)(dp[n] % mod - 1);
+
+        return (int) (dp[n] % mod - 1);
     }
 
+    // 2. Count Distinct Palindromic Subsequence
 
-    //  2. Count Distinct Palindromic Subsequence
-    
+    // https://leetcode.com/problems/unique-paths/
 
     public static void main(String[] args) {
-        
+
     }
 }
