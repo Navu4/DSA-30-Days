@@ -47,7 +47,7 @@ public class day_21 {
 
         int maxR = 0;
         for (int i = rightToLeft.length - 1; i >= 0; i--) {
-            rightToLeft[i] = maxL;
+            rightToLeft[i] = maxR;
             maxR = Math.max(maxR, height[i]);
         }
 
